@@ -4,11 +4,25 @@ using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Identity.Client;
 
 const string orgUrl = "https://org6856e656.crm5.dynamics.com";
 const string solution = "XCL_canvas_pcf_lab";
 const string table = "xcl_pcfprobefile";
-using var client = new ServiceClient($"AuthType=OAuth;Url={orgUrl};Username=ryan.dev@ducthinh120199gmail.onmicrosoft.com;AppId=51f81489-12ee-4a9e-aaae-a2591f45987d;RedirectUri=http://localhost;LoginPrompt=Auto;RequireNewInstance=true");
+var deviceLogin = args.Contains("--device-login");
+args = args.Where(arg=>arg != "--device-login").ToArray();
+ServiceClient CreateClient() {
+  if (!deviceLogin) return new ServiceClient($"AuthType=OAuth;Url={orgUrl};Username=ryan.dev@ducthinh120199gmail.onmicrosoft.com;AppId=51f81489-12ee-4a9e-aaae-a2591f45987d;RedirectUri=http://localhost;LoginPrompt=Auto;RequireNewInstance=true");
+  var application = PublicClientApplicationBuilder.Create("51f81489-12ee-4a9e-aaae-a2591f45987d").WithAuthority("https://login.microsoftonline.com/organizations").Build();
+  AuthenticationResult? authentication = null;
+  return new ServiceClient(new Uri(orgUrl), async _ => {
+    if (authentication == null || authentication.ExpiresOn < DateTimeOffset.UtcNow.AddMinutes(2)) {
+      authentication = await application.AcquireTokenWithDeviceCode(new[] {$"{orgUrl}/.default"}, code => {Console.WriteLine(code.Message);return Task.CompletedTask;}).ExecuteAsync();
+    }
+    return authentication.AccessToken;
+  }, true);
+}
+using var client = CreateClient();
 if (!client.IsReady) throw new InvalidOperationException(client.LastError);
 if (client.ConnectedOrgUriActual.Host != new Uri(orgUrl).Host) throw new InvalidOperationException("Unexpected organization.");
 var who = (WhoAmIResponse)client.Execute(new WhoAmIRequest());
@@ -16,6 +30,21 @@ if (who.OrganizationId != Guid.Parse("e2466759-d1c2-f111-a04f-002248ed6f86")) th
 Console.WriteLine($"Verified demo organization {who.OrganizationId}");
 var solutions = client.RetrieveMultiple(new QueryExpression("solution") { ColumnSet = new ColumnSet("solutionid"), Criteria = new FilterExpression { Conditions = { new ConditionExpression("uniquename", ConditionOperator.Equal, solution) } } });
 if (solutions.Entities.Count != 1 || solutions.Entities[0].Id != Guid.Parse("587e1496-3ec5-f111-a05a-002248ec830f")) throw new InvalidOperationException("Target solution mismatch.");
+if (args.Length == 1 && args[0] == "--inspect") {
+  foreach (var logicalName in new[] { table, "account" }) {
+    var definition = ((RetrieveEntityResponse)client.Execute(new RetrieveEntityRequest { LogicalName=logicalName, EntityFilters=EntityFilters.Entity | EntityFilters.Attributes, RetrieveAsIfPublished=false })).EntityMetadata;
+    Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new {
+      definition.LogicalName, definition.SchemaName, definition.EntitySetName, definition.LogicalCollectionName,
+      definition.PrimaryIdAttribute, definition.PrimaryNameAttribute, definition.ObjectTypeCode,
+      definition.IsValidForAdvancedFind, definition.IsCustomEntity, definition.IsPrivate,
+      definition.DataProviderId, definition.OwnershipType, definition.IsManaged,
+      columns=definition.Attributes.Select(a=>new {a.LogicalName,a.AttributeType,a.IsValidForRead,a.IsValidForCreate,a.IsValidForUpdate,a.AttributeOf,a.IsPrimaryId,a.IsPrimaryName,DisplayName=a.DisplayName?.LocalizedLabels.FirstOrDefault()?.Label})
+    }));
+    var views = client.RetrieveMultiple(new QueryExpression("savedquery") {ColumnSet=new ColumnSet("name","querytype","isdefault"),Criteria=new FilterExpression {Conditions={new ConditionExpression("returnedtypecode",ConditionOperator.Equal,definition.ObjectTypeCode!.Value)}}});
+    foreach(var view in views.Entities) Console.WriteLine($"VIEW {logicalName}: {view.GetAttributeValue<string>("name")} type {view.GetAttributeValue<int>("querytype")} default {view.GetAttributeValue<bool>("isdefault")}");
+  }
+  return;
+}
 if (args.Length > 0 && args[0] == "--verify") {
   if (args.Length != 3) throw new ArgumentException("Usage: --verify <batch-id> <original-file-directory>");
   var query = new QueryExpression(table) {
