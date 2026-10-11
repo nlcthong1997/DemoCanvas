@@ -8,5 +8,6 @@
     "name": "CmsUploadDemo",
     "makerHost": "make.powerapps.com"
   },
-  "status": "awaiting-authentication-and-canvas-connection"
+  "canvasConnection": "connected-and-synced",
+  "status": "awaiting-pac-authentication-and-pcf-import"
 }

@@ -36,6 +36,7 @@
     <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\node_modules\**" />
     <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\deployment\**" />
     <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\preview\**" />
+    <ExcludeDirectories Include="$(MSBuildThisFileDirectory)\canvas\**" />
   </ItemGroup>
 
   <ItemGroup>

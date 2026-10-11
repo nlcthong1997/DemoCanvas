@@ -25,6 +25,6 @@ Prerequisites: .NET SDK, Node/npm, and network access to NuGet/npm for the first
 
 This package is a UI feasibility demo with simulated submission. Backend upload is not implemented.
 
-Production ZIP builds successfully. The user created `CmsUploadDemo` (app ID `68d6e398-6d5f-494f-a2a3-3c3ed34f9a3d`) and supplied its Studio edit URL in the target solution. PAC authentication and the live Canvas connection remain pending; no online import has been verified.
+Production ZIP builds successfully. The user created `CmsUploadDemo` (app ID `68d6e398-6d5f-494f-a2a3-3c3ed34f9a3d`) in the target solution. Coauthoring is enabled and Canvas Authoring MCP has connected successfully and synchronized the blank app into `canvas/`. PAC authentication and PCF import remain pending; no online import has been verified.
 
 For a full-screen PCF host, set the control's `X` and `Y` to `0`, `Width` to `Parent.Width`, and `Height` to `Parent.Height`. Validate the actual Canvas rendering after importing and inserting the code component.
