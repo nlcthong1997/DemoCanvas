@@ -29,7 +29,7 @@ Production ZIP builds successfully. The user created `CmsUploadDemo` (app ID `68
 
 PAC authenticated to the target environment and successfully pushed the PCF to `XCL_canvas_pcf_lab`, using its publisher `XCL_Demo` and prefix `xcl`. Dataverse queries confirmed the control and its membership in the exact solution ID above. `pac pcf push` used a development build for this demo; the separate Release ZIP is the production build artifact.
 
-Canvas compilation currently reports `Unknown Code Component` because the component has not yet been imported into the app's control catalog. In Studio, save/reload, then use **Insert > Get more components > Code** to import **XCL Profile Photo Demo**. After that, synchronize current app state, insert/configure the PCF, compile and validate the actual rendering. The failed insertion candidate was removed from local YAML; no Canvas insertion is claimed.
+The user imported the component into Studio and inserted it into `Screen1` as `CmsUploadDemo1`. Canvas MCP then applied `X=0`, `Y=0`, `Width=Parent.Width`, and `Height=Parent.Height`. A fresh server synchronization confirmed the size formulas; zero positions are omitted as defaults. Canvas YAML validation passes and App Checker reports no issues. Full-screen rendering, interactive Preview behavior and saving/publishing the latest app version still require runtime review. The user's blank `Component1` definition is preserved.
 
 Repeat deployment after code changes:
 

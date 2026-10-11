@@ -1,3 +1,5 @@
 EditorState:
   ScreensOrder:
     - Screen1
+  ComponentDefinitionsOrder:
+    - Component1

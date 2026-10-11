@@ -2,3 +2,12 @@ Screens:
   Screen1:
     Properties:
       LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+    Children:
+      - CmsUploadDemo1:
+          Control: CodeComponent
+          ComponentName: xcl_CmsUploadDemoNameSpace.CmsUploadDemo
+          Properties:
+            X: =0
+            Y: =0
+            Width: =Parent.Width
+            Height: =Parent.Height

@@ -35,7 +35,7 @@ The four initial rows and Home statistics are samples. Selecting real files repl
 
 `sampleProperty` returns JSON metadata when Send is clicked, through `notifyOutputChanged()`. It includes `requestId`, `photoType`, `campus`, `demo: true`, and `files` with `name`, `id`, `originalBytes`, `resizedBytes`, and `sample`. It does **not** contain image bytes.
 
-No photos are uploaded to SharePoint, Dataverse, Entra ID or PowerSchool. Campus authorization, real ID lookup and delivery are not implemented. User/campus values are mock data. The PCF has been imported into the authorized demo environment and solution recorded in `deployment/demo-target.json`; it still needs to be loaded into the Canvas app and verified there.
+No photos are uploaded to SharePoint, Dataverse, Entra ID or PowerSchool. Campus authorization, real ID lookup and delivery are not implemented. User/campus values are mock data. The PCF has been imported into the authorized demo environment and solution recorded in `deployment/demo-target.json`, inserted into Canvas as `CmsUploadDemo1`, and configured to fill `Screen1`. Canvas YAML validation passes and App Checker reports no issues. Actual full-screen runtime rendering still needs review in Studio Preview.
 
 Manifest version: `0.0.2`. Platform React is used; CSS is scoped to `.xp-app`; no external services are called. To test in Canvas, package the PCF into a solution, authenticate to the intended development environment, import it and add the control to a Canvas screen. Set a suitable width and height.
 

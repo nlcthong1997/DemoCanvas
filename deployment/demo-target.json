@@ -15,5 +15,7 @@
   },
   "canvasConnection": "connected-and-synced",
   "pcfImport": "completed",
-  "status": "awaiting-component-import-into-canvas-app"
+  "canvasControl": "CmsUploadDemo1",
+  "canvasValidation": "passed; no app checker issues",
+  "status": "pcf-inserted-and-configured; awaiting-runtime-review"
 }
