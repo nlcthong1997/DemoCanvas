@@ -25,6 +25,16 @@ Prerequisites: .NET SDK, Node/npm, and network access to NuGet/npm for the first
 
 This package is a UI feasibility demo with simulated submission. Backend upload is not implemented.
 
-Production ZIP builds successfully. The user created `CmsUploadDemo` (app ID `68d6e398-6d5f-494f-a2a3-3c3ed34f9a3d`) in the target solution. Coauthoring is enabled and Canvas Authoring MCP has connected successfully and synchronized the blank app into `canvas/`. PAC authentication and PCF import remain pending; no online import has been verified.
+Production ZIP builds successfully. The user created `CmsUploadDemo` (app ID `68d6e398-6d5f-494f-a2a3-3c3ed34f9a3d`) in the target solution. Coauthoring is enabled and Canvas Authoring MCP has connected successfully and synchronized the blank app into `canvas/`.
+
+PAC authenticated to the target environment and successfully pushed the PCF to `XCL_canvas_pcf_lab`, using its publisher `XCL_Demo` and prefix `xcl`. Dataverse queries confirmed the control and its membership in the exact solution ID above. `pac pcf push` used a development build for this demo; the separate Release ZIP is the production build artifact.
+
+Canvas compilation currently reports `Unknown Code Component` because the component has not yet been imported into the app's control catalog. In Studio, save/reload, then use **Insert > Get more components > Code** to import **XCL Profile Photo Demo**. After that, synchronize current app state, insert/configure the PCF, compile and validate the actual rendering. The failed insertion candidate was removed from local YAML; no Canvas insertion is claimed.
+
+Repeat deployment after code changes:
+
+```powershell
+pac pcf push --environment 268b8ad1-b6d1-ed49-b59a-d9bc85e9b99b --solution-unique-name XCL_canvas_pcf_lab
+```
 
 For a full-screen PCF host, set the control's `X` and `Y` to `0`, `Width` to `Parent.Width`, and `Height` to `Parent.Height`. Validate the actual Canvas rendering after importing and inserting the code component.

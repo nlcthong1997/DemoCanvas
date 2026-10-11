@@ -2,12 +2,18 @@
   "environmentId": "268b8ad1-b6d1-ed49-b59a-d9bc85e9b99b",
   "existingSolutionId": "587e1496-3ec5-f111-a05a-002248ec830f",
   "authenticationProfile": "Personal-Demo",
+  "solutionUniqueName": "XCL_canvas_pcf_lab",
+  "publisherUniqueName": "XCL_Demo",
+  "publisherPrefix": "xcl",
   "component": "CmsUploadDemoNameSpace.CmsUploadDemo",
+  "dataverseComponentName": "xcl_CmsUploadDemoNameSpace.CmsUploadDemo",
+  "dataverseComponentId": "1d6b21eb-0ae6-431d-8f04-8c6d843fe1fe",
   "canvasApp": {
     "id": "68d6e398-6d5f-494f-a2a3-3c3ed34f9a3d",
     "name": "CmsUploadDemo",
     "makerHost": "make.powerapps.com"
   },
   "canvasConnection": "connected-and-synced",
-  "status": "awaiting-pac-authentication-and-pcf-import"
+  "pcfImport": "completed",
+  "status": "awaiting-component-import-into-canvas-app"
 }
