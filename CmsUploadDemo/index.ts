@@ -42,7 +42,8 @@ export class CmsUploadDemo implements ComponentFramework.ReactControl<IInputs, I
         const props: IHelloWorldProps = {
             onSubmit: dispatch,
             onIntegrationRequest: dispatch,
-            integrationResponse: context.parameters.integrationResponse.raw ?? undefined
+            integrationResponse: context.parameters.integrationResponse.raw ?? undefined,
+            viewportHeight: Number.isFinite(Number(context.mode.allocatedHeight)) && Number(context.mode.allocatedHeight) > 0 ? Number(context.mode.allocatedHeight) : undefined
         };
         return React.createElement(
             HelloWorld, props

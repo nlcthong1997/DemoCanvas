@@ -4,7 +4,7 @@ import { IntegrationLab, IntegrationProps } from './integrations/IntegrationLab'
 type Screen = 'home' | 'bulk' | 'integrations';
 type PhotoType = 'Students' | 'Parents';
 interface PhotoRow { key: string; name: string; id: string; originalSize: number; size?: number; preview?: string; error?: string; sample?: boolean; }
-export interface IHelloWorldProps extends IntegrationProps { onSubmit?: (payload: string) => void; }
+export interface IHelloWorldProps extends IntegrationProps { onSubmit?: (payload: string) => void; viewportHeight?: number; }
 const samples: PhotoRow[] = [
   { key: 's1', name: '0012345.jpg', id: '0012345', originalSize: 3565158, size: 38912, sample: true },
   { key: 's2', name: '0012346.png', id: '0012346', originalSize: 2202010, size: 35840, sample: true },
@@ -40,7 +40,7 @@ async function preparePhoto(file: File, type: PhotoType): Promise<PhotoRow> {
   finally { URL.revokeObjectURL(objectUrl); }
 }
 
-export function HelloWorld({ onSubmit, onIntegrationRequest, integrationResponse }: IHelloWorldProps): React.ReactElement {
+export function HelloWorld({ onSubmit, onIntegrationRequest, integrationResponse, viewportHeight }: IHelloWorldProps): React.ReactElement {
   const [screen, setScreen] = React.useState<Screen>('home');
   const [campus, setCampus] = React.useState('SG · XWA');
   const [type, setType] = React.useState<PhotoType>('Students');
@@ -50,6 +50,8 @@ export function HelloWorld({ onSubmit, onIntegrationRequest, integrationResponse
   const [notice, setNotice] = React.useState('');
   const [sent, setSent] = React.useState(0);
   const input = React.useRef<HTMLInputElement>(null);
+  const main = React.useRef<HTMLElement>(null);
+  React.useEffect(() => { if (main.current) main.current.scrollTop = 0; }, [screen]);
   const ready = rows.filter(row => !row.error);
   const invalid = rows.length - ready.length;
   const navigate = (target: Screen): void => { setScreen(target); setNotice(''); };
@@ -78,7 +80,7 @@ export function HelloWorld({ onSubmit, onIntegrationRequest, integrationResponse
   const campusSelect = (id: string): React.ReactElement => <select id={id} value={campus} onChange={event => { setCampus(event.target.value); setSent(0); }} disabled={busy}><option>SG · XWA</option><option>SG · XCT</option></select>;
   const unavailable = (label: string): void => setNotice(`${label} is outside this two-screen prototype.`);
 
-  return <div className="xp-app">
+  return <div className={viewportHeight ? 'xp-app xp-hosted' : 'xp-app'} style={viewportHeight ? {height: viewportHeight, minHeight: 0} : undefined}>
     <aside className="xp-sidebar" aria-label="Main navigation">
       <div className="xp-brand"><span className="xp-logo">XP</span><div><strong>Profile Photo</strong><small>XCL Education</small></div></div>
       <nav>
@@ -93,7 +95,7 @@ export function HelloWorld({ onSubmit, onIntegrationRequest, integrationResponse
       </nav>
       <div className="xp-sidebar-note"><span className="xp-demo-dot" /> Interactive demo<small>Home & bulk upload</small></div>
     </aside>
-    <main className="xp-main">
+    <main ref={main} className="xp-main" tabIndex={0}>
       <div hidden={screen !== 'integrations'}><IntegrationLab onIntegrationRequest={onIntegrationRequest} integrationResponse={integrationResponse} /></div>
       {screen !== 'integrations' && (screen === 'home' ? <>
         <header className="xp-header"><div><h1>Good morning, Linh</h1><p>Registrar · access to SG · XWA and SG · XCT</p></div><div className="xp-campus-inline"><label htmlFor="home-campus">Campus</label>{campusSelect('home-campus')}</div></header>

@@ -9,3 +9,7 @@
 .xp-app .xp-probe-results article { border-top: 1px solid #e6eaf0; padding: 16px 0; overflow-wrap: anywhere; }
 .xp-app .xp-probe-results pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f5f7fa; padding: 12px; }
 @media(max-width:480px) { .xp-app .xp-sidebar .xp-nav:last-child { display: block; } .xp-app .xp-probe-grid { grid-template-columns: minmax(0, 1fr); } }
+.xp-app.xp-hosted { overflow: hidden; }
+.xp-app.xp-hosted > .xp-main { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.xp-app.xp-hosted > .xp-sidebar { min-height: 0; overflow-y: auto; }
+@media(max-width:480px) { .xp-app.xp-hosted > .xp-sidebar { max-height: 45%; } }

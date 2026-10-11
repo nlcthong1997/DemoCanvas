@@ -15,10 +15,11 @@
   },
   "canvasConnection": "connected-and-synced",
   "pcfImport": "completed",
-  "pcfVersion": "0.0.4",
+  "pcfVersion": "0.0.5",
+  "canvasRoundTrip": "success-confirmed-in-user-preview-screenshot",
   "integrationHandler": "applied-and-validated",
   "integrationResponseBinding": "applied-and-server-verified",
   "canvasControl": "CmsUploadDemo1",
   "canvasValidation": "passed; no App Checker issues",
-  "status": "canvas-bridge-configured; awaiting-runtime-roundtrip-and-backend-setup"
+  "status": "canvas-roundtrip-confirmed; scroll-fix-deployed; backend-setup-pending"
 }

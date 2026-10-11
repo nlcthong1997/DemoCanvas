@@ -27,11 +27,11 @@ This package is a UI feasibility demo with simulated submission. Backend upload 
 
 Production ZIP builds successfully. The user created `CmsUploadDemo` (app ID `68d6e398-6d5f-494f-a2a3-3c3ed34f9a3d`) in the target solution. Coauthoring is enabled and Canvas Authoring MCP has connected successfully and synchronized the blank app into `canvas/`.
 
-PAC authenticated to the target environment and successfully pushed the PCF to `XCL_canvas_pcf_lab`, using its publisher `XCL_Demo` and prefix `xcl`. Dataverse queries confirmed the control and its membership in the exact solution ID above. Version `0.0.4` is built and deployed in production mode, set explicitly in `CanvasDemo.pcfproj`.
+PAC authenticated to the target environment and successfully pushed the PCF to `XCL_canvas_pcf_lab`, using its publisher `XCL_Demo` and prefix `xcl`. Dataverse queries confirmed the control and its membership in the exact solution ID above. Version `0.0.5` is built and deployed in production mode, set explicitly in `CanvasDemo.pcfproj`.
 
 The user imported the component into Studio and inserted it into `Screen1` as `CmsUploadDemo1`. Canvas MCP then applied `X=0`, `Y=0`, `Width=Parent.Width`, and `Height=Parent.Height`. A fresh server synchronization confirmed the size formulas; zero positions are omitted as defaults. Canvas YAML validation passes and App Checker reports no issues. Full-screen rendering, interactive Preview behavior and saving/publishing the latest app version still require runtime review. The user's blank `Component1` definition is preserved.
 
-Integration lab is implemented and deployed in PCF `0.0.4`. Studio has loaded the updated manifest. `Integration-OnChange.pfx` and the input binding `integrationResponse=Coalesce(varIntegrationResponse, "")` are applied and server-verified. Canvas validation passes and App Checker reports no issues. Runtime round-trip and backend services still require testing/configuration. Save before closing Studio. See `INTEGRATION.md` for the feasibility evidence checklist.
+Integration lab is implemented and deployed in PCF `0.0.5`. Studio has loaded the updated manifest. `Integration-OnChange.pfx` and the input binding `integrationResponse=Coalesce(varIntegrationResponse, "")` are applied and server-verified. Canvas validation passes and App Checker reports no issues. The user Preview screenshot confirms a successful Canvas round trip. Backend services still require testing/configuration. Save before closing Studio. See `INTEGRATION.md` for the feasibility evidence checklist.
 
 Repeat deployment after code changes:
 

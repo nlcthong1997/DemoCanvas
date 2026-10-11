@@ -30,4 +30,6 @@ PCF manifest, ESLint and TypeScript build pass. Chrome fixture checks cover requ
 
 After importing the new PCF into Dataverse, save and reopen Studio, accept the code-component update, reconnect/sync Canvas, bind the handler/input and compile. Then run Canvas round trip in Preview. Record each backend test independently; UI availability does not establish connectivity.
 
-Current live state: Studio has loaded the updated component manifest. OnChange and `integrationResponse=Coalesce(varIntegrationResponse, "")` are applied and verified through a fresh server synchronization. Canvas validation passes and App Checker reports no issues. Runtime round-trip evidence is still pending the user's Preview test. Save the app before leaving Studio so the latest coauthoring changes persist.
+Current live state: OnChange and `integrationResponse=Coalesce(varIntegrationResponse, "")` are applied and verified through a fresh server synchronization. Canvas validation passes and App Checker reports no issues. The user's Preview screenshot confirms a successful Canvas round trip. It does not establish backend connectivity. Save the app before leaving Studio so the latest coauthoring changes persist.
+
+Version `0.0.5` uses the tracked `context.mode.allocatedHeight` to constrain the hosted React root and enables vertical scrolling inside the main content/sidebar. Standalone preview retains its natural page height. Chrome checks confirm mouse-wheel scrolling with a 600px PCF viewport and a positive, scrollable main region on a 390px phone viewport.
