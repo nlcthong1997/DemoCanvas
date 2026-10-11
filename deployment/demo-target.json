@@ -1,0 +1,8 @@
+{
+  "environmentId": "268b8ad1-b6d1-ed49-b59a-d9bc85e9b99b",
+  "existingSolutionId": "587e1496-3ec5-f111-a05a-002248ec830f",
+  "authenticationProfile": "Personal-Demo",
+  "component": "CmsUploadDemoNameSpace.CmsUploadDemo",
+  "canvasApp": null,
+  "status": "awaiting-authentication-and-canvas-session"
+}

@@ -1,1 +1,44 @@
-# DemoCanvas
+# XCL Profile Photo — React PCF prototype
+
+Two interactive screens based on pages 1 and 8 of the supplied PDF: **Home** and **Bulk upload**. Both share the sidebar and campus selection. Other navigation items show an explanatory message.
+
+## Preview
+
+Open `preview/dist/index.html` directly in Chrome or Edge. This self-contained HTML uses the same React component as the PCF and can be copied to another machine. Regenerate it from this directory with:
+
+```powershell
+npm.cmd run preview:build
+```
+
+Build and run the PCF development harness:
+
+```powershell
+npm.cmd run build
+npm.cmd start
+```
+
+The harness prints its URL. Use a component viewport of roughly 960 × 600 or larger to review the desktop layout.
+
+## Implemented
+
+- File picker and drag/drop; maximum 100 files.
+- JPG/PNG validation, numeric student IDs, numeric or `P-20311` parent IDs.
+- 4 MB limit per image; minimum 320 pixels in both dimensions.
+- Center crop to 320 × 400, JPEG quality 0.85; preview and original/processed size.
+- Duplicate IDs, corrupt files and invalid-file removal.
+- Simulated batch submission and a metadata output for Canvas.
+- Responsive layout, including a 390-pixel phone viewport.
+
+The four initial rows and Home statistics are samples. Selecting real files replaces the sample rows. File name rules and the 4 MB bulk-file limit are demo assumptions to confirm. Center cropping may cut off faces; production can add a crop editor. Preview images live only in component memory. No browser storage is used.
+
+## Canvas integration boundary
+
+`sampleProperty` returns JSON metadata when Send is clicked, through `notifyOutputChanged()`. It includes `requestId`, `photoType`, `campus`, `demo: true`, and `files` with `name`, `id`, `originalBytes`, `resizedBytes`, and `sample`. It does **not** contain image bytes.
+
+No photos are uploaded to SharePoint, Dataverse, Entra ID or PowerSchool. Campus authorization, real ID lookup and delivery are not implemented. User/campus values are mock data. This session has not deployed to any tenant.
+
+Manifest version: `0.0.2`. Platform React is used; CSS is scoped to `.xp-app`; no external services are called. To test in Canvas, package the PCF into a solution, authenticate to the intended development environment, import it and add the control to a Canvas screen. Set a suitable width and height.
+
+## Verification
+
+PCF build validates manifest, ESLint and TypeScript. Standalone preview checked in headless Chrome: navigation, invalid removal, crop dimensions, duplicates, corrupt files, parent IDs, JSON submission, mobile overflow and browser errors. Screenshots: `preview/screenshots/`. Canvas rendering and connectors still require environment testing.
