@@ -19,6 +19,6 @@
   "integrationHandler": "applied-and-validated",
   "integrationResponseBinding": "pending-studio-component-update",
   "canvasControl": "CmsUploadDemo1",
-  "canvasValidation": "passed; no app checker issues",
+  "canvasValidation": "passed; App Checker has one unused-variable warning until integrationResponse is bound",
   "status": "integration-lab-deployed; awaiting-studio-component-update-and-backend-setup"
 }

@@ -29,3 +29,5 @@ Start with a dedicated Dataverse table `xcl_integrationprobe` with a text primar
 PCF manifest, ESLint and TypeScript build pass. Chrome fixture checks cover request locking, malformed/wrong/stale responses, host response, duplicate/late response rejection, timeout, disconnected host and 390-pixel layout. Fixture responses are local test data and are not backend evidence.
 
 After importing the new PCF into Dataverse, save and reopen Studio, accept the code-component update, reconnect/sync Canvas, bind the handler/input and compile. Then run Canvas round trip in Preview. Record each backend test independently; UI availability does not establish connectivity.
+
+Current live state: the OnChange handler has been applied and validates. App Checker reports one unused-variable warning for `varIntegrationResponse` because the response input is not yet available/bound in Studio's old manifest. Resolve it by updating the component and binding the response, not by deleting the handler variable.
