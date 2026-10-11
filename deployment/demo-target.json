@@ -3,6 +3,10 @@
   "existingSolutionId": "587e1496-3ec5-f111-a05a-002248ec830f",
   "authenticationProfile": "Personal-Demo",
   "component": "CmsUploadDemoNameSpace.CmsUploadDemo",
-  "canvasApp": null,
-  "status": "awaiting-authentication-and-canvas-session"
+  "canvasApp": {
+    "id": "68d6e398-6d5f-494f-a2a3-3c3ed34f9a3d",
+    "name": "CmsUploadDemo",
+    "makerHost": "make.powerapps.com"
+  },
+  "status": "awaiting-authentication-and-canvas-connection"
 }
