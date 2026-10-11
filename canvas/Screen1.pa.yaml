@@ -21,6 +21,9 @@ Screens:
                               "dataverse",
                               Switch(
                                   Text(request.operation),
+                                  "read-images",
+                                  Refresh('PCF Probe Files');
+                                  Set(varIntegrationResponse, JSON({requestId: Text(request.requestId), service: "dataverse", ok: true, message: "Loaded the latest saved files for image preview.", data: ForAll(FirstN(SortByColumns(Filter('PCF Probe Files', xcl_filename <> Blank()), "createdon", SortOrder.Descending), 3), {recordId: Text(xcl_pcfprobefileid), fileName: xcl_filename, mime: Coalesce(xcl_mimetype, "application/octet-stream"), contentBase64: If(Len(xcl_contentbase64) <= 174764, xcl_contentbase64, "")})}, JSONFormat.Compact)),
                                   "read",
                                   Refresh('PCF Probe Files');
                                   Set(varIntegrationResponse, JSON({requestId: Text(request.requestId), service: "dataverse", ok: true, message: "Read dedicated Dataverse test records.", data: ForAll(FirstN('PCF Probe Files', 10), {recordId: Text(xcl_pcfprobefileid), name: xcl_name, fileName: xcl_filename, batchId: xcl_batchid})}, JSONFormat.Compact)),

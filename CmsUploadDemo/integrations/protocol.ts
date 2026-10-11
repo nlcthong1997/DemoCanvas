@@ -4,7 +4,7 @@ export interface ProbeRequest {
   version: 1;
   requestId: string;
   service: ProbeService;
-  operation: 'ping' | 'read' | 'write' | 'bulk-write';
+  operation: 'ping' | 'read' | 'write' | 'bulk-write' | 'read-images';
   payload: { message: string; files?: ProbeFile[] };
 }
 export interface ProbeFile { name: string; mime: string; contentBase64: string; bytes: number; }

@@ -82,3 +82,11 @@ During diagnosis PAC read the table successfully but found no records, confirmed
 The SDK helper supports read-only `--inspect` to compare published custom-table metadata with Accounts, and optional `--device-login` for Microsoft device-code authentication when interactive SDK sign-in does not work. This uses a fresh in-memory MSAL session and never prints or persists access tokens. The metadata inspection has not completed because sign-in failed; the device-code attempt was cancelled.
 
 PCF manifest, TypeScript and ESLint checks pass. Chrome tests cover scroll/mobile layout, stale/malformed/duplicate responses, pending request locking, navigation, timeouts, actual public API fetch, HTTP failure handling and selected file encoding. Browser fixtures do not prove live Dataverse writes.
+
+## Saved image preview (0.0.8)
+
+Integration lab now includes Saved images in Dataverse > Load saved images. The new read-images operation refreshes the table, filters records with a file name, sorts by createdon descending and returns the latest 3 files. This is a bounded demo view, not pagination. JPEG/PNG contents are decoded to temporary Blob URLs, displayed with their file names and downloadable; URLs are revoked on refresh/unmount. Each preview is limited to 128 KB. The test log lists IDs/names without retaining the Base64 body.
+
+Coauthoring remains disabled. Paste the complete updated Integration-OnChange.pfx into CmsUploadDemo1.OnChange, preserve integrationResponse = Coalesce(varIntegrationResponse, ""), Save and reopen Studio to load PCF 0.0.8. Preview > Integration lab > Load saved images. The updated formula has not yet been validated in live Studio or exercised against its connector. Canvas YAML in this repo reflects the intended formula, not a fresh live sync.
+
+TypeScript, manifest validation, ESLint and production deployment build passed. A Chrome fixture verified three decoded PNG previews, download filename, empty refresh and malformed image handling. These fixtures do not establish that the new Canvas read-images formula succeeds against Dataverse. PCF 0.0.8 was imported and published successfully to the demo org.

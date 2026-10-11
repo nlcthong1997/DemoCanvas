@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { parseResponse, ProbeFile, ProbeRequest, ProbeResponse, ProbeService } from './protocol';
 import { getPublicSamples, publicApiUrl } from './publicApi';
+import { parseSavedFiles, SavedImages } from './SavedImages';
 
 export interface IntegrationProps {
   onIntegrationRequest?: (payload: string) => void;
@@ -20,13 +21,25 @@ export function IntegrationLab({onIntegrationRequest, integrationResponse}: Inte
   const [notice, setNotice] = React.useState('');
   const [files, setFiles] = React.useState<ProbeFile[]>([]);
   const [readingFiles, setReadingFiles] = React.useState(false);
+  const [savedImages, setSavedImages] = React.useState<ReturnType<typeof parseSavedFiles>>([]);
+  const [imagesLoaded, setImagesLoaded] = React.useState(false);
   const activeRequest = React.useRef<string>();
   const apiController = React.useRef<AbortController>();
   React.useEffect(() => () => {activeRequest.current = undefined; apiController.current?.abort();}, []);
   const response = React.useMemo(() => parseResponse(integrationResponse), [integrationResponse]);
   React.useEffect(() => {
     if (!pending || !response || response.requestId !== pending.requestId || response.service !== pending.service) return;
-    setHistory(previous => [response, ...previous].slice(0, 20));
+    let result = response;
+    if (pending.operation === 'read-images' && response.ok) {
+      try {
+        const loaded = parseSavedFiles(response.data);
+        setSavedImages(loaded); setImagesLoaded(true);
+        result = {...response, data: loaded.map(file => ({recordId: file.recordId, fileName: file.fileName}))};
+      } catch (error) {
+        result = {...response, ok: false, message: error instanceof Error ? error.message : 'Invalid image response.', data: undefined};
+      }
+    }
+    setHistory(previous => [result, ...previous].slice(0, 20));
     activeRequest.current = undefined;
     setPending(undefined); setNotice('');
   }, [pending, response]);
@@ -85,6 +98,7 @@ export function IntegrationLab({onIntegrationRequest, integrationResponse}: Inte
     <section className="xp-panel xp-probe-input"><label htmlFor="probe-message">Test message</label><input id="probe-message" maxLength={200} value={message} onChange={event => setMessage(event.target.value)} /><p>Write creates a test record. Uploading photos is a separate test.</p></section>
     <div className="xp-probe-grid">{services.map(service => <section key={service.id} className="xp-panel xp-probe-card"><h2>{service.title}</h2><p>{service.detail}</p><div className="xp-actions"><button className="xp-button xp-primary" disabled={!!pending} onClick={() => run(service.id, service.id === 'canvas' || service.id === 'automate' ? 'ping' : 'read')}>{pending?.service === service.id ? 'Waiting…' : service.id === 'canvas' || service.id === 'automate' ? 'Run test' : 'Read test'}</button>{(service.id === 'dataverse' || service.id === 'sharepoint') && <button className="xp-button" disabled={!!pending} onClick={() => run(service.id, 'write')}>Write test</button>}</div></section>)}</div>
     <section className="xp-panel xp-probe-input"><h2>Batch files → Dataverse</h2><p>Choose up to 10 test files, 128 KB each and 384 KB total. This demo saves file contents as Base64 text in dedicated Dataverse records.</p><input type="file" multiple aria-label="Choose Dataverse test files" disabled={!!pending || readingFiles} onChange={event => {void selectFiles(event.target.files);}} /><ul>{files.map((file,index) => <li key={`${file.name}-${index}`}>{file.name} · {file.bytes} bytes</li>)}</ul><button className="xp-button xp-primary" disabled={!files.length || !!pending || readingFiles} onClick={() => run('dataverse','bulk-write')}>{readingFiles ? 'Reading files…' : `Save ${files.length} files to Dataverse`}</button></section>
+    <section className="xp-panel xp-probe-input"><h2>Saved images in Dataverse</h2><p>Load the 3 most recent saved files. JPEG and PNG previews support files up to 128 KB each.</p><button className="xp-button xp-primary" disabled={!!pending} onClick={() => run('dataverse', 'read-images')}>{pending?.operation === 'read-images' ? 'Loading images…' : 'Load saved images'}</button>{imagesLoaded && !savedImages.length && <p>No saved files were found.</p>}<SavedImages files={savedImages} /></section>
     {notice && <p className="xp-notice" role="status">{notice}</p>}
     <section className="xp-panel xp-probe-results" aria-live="polite"><h2>Test results</h2>{pending && <p>Waiting for {pending.service} · {pending.requestId}</p>}{!history.length && <p>No integration has been verified yet.</p>}{history.map(result => <article key={result.requestId}><span className={`xp-badge ${result.ok ? 'good' : 'bad'}`}>{result.ok ? 'Success' : 'Failed'}</span> <strong>{result.service}</strong><p>{result.message}</p><small>{result.requestId}</small>{result.data !== undefined && <pre>{JSON.stringify(result.data, null, 2)}</pre>}</article>)}</section>
   </>;

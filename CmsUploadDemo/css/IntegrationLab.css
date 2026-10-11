@@ -8,6 +8,10 @@
 .xp-app .xp-probe-results { padding: 20px; margin-top: 20px; }
 .xp-app .xp-probe-results article { border-top: 1px solid #e6eaf0; padding: 16px 0; overflow-wrap: anywhere; }
 .xp-app .xp-probe-results pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f5f7fa; padding: 12px; }
+.xp-app .xp-saved-images { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
+.xp-app .xp-saved-images article { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px; border: 1px solid #e6eaf0; border-radius: 8px; min-width: 0; }
+.xp-app .xp-saved-images img { width: 100%; height: 240px; object-fit: contain; background: #f5f7fa; border-radius: 6px; }
+.xp-app .xp-saved-images strong { overflow-wrap: anywhere; }
 @media(max-width:480px) { .xp-app .xp-sidebar .xp-nav:last-child { display: block; } .xp-app .xp-probe-grid { grid-template-columns: minmax(0, 1fr); } }
 .xp-app.xp-hosted { overflow: hidden; }
 .xp-app.xp-hosted > .xp-main { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
