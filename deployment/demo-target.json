@@ -20,7 +20,7 @@
   "integrationHandler": "user-pasted-full-handler; runtime-bulk-write-confirmed",
   "integrationResponseBinding": "applied-and-server-verified",
   "canvasControl": "CmsUploadDemo1",
-  "canvasValidation": "full handler previously validated; one medium per-file ForAll Patch advisory",
+  "canvasValidation": "4 files passed; App Checker only existing medium ForAll performance advisory",
   "status": "Canvas bridge and real Dataverse batch file persistence verified",
   "publicApi": {
     "endpoint": "https://api.github.com/repos/microsoft/PowerApps-Samples/contents/component-framework",
@@ -39,6 +39,6 @@
     "isolation": "both tables failed under Coauthoring; probe table added after disabling it",
     "verifiedBatchId": "probe-1791712551925-12ycd0"
   },
-  "coauthoring": "disabled-for-datasource-runtime-verification",
-  "savedImagePreview": "PCF deployed; Chrome fixture passed; new Canvas OnChange pending manual paste and runtime verification"
+  "coauthoring": "user-reenabled; MCP connected",
+  "savedImagePreview": "Canvas formula applied and fresh server-sync verified; validation passed; user Preview pending"
 }

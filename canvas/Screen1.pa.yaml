@@ -8,7 +8,7 @@ Screens:
           ComponentName: xcl_CmsUploadDemoNameSpace.CmsUploadDemo
           Properties:
             Height: =Parent.Height
-            OnChange: |
+            OnChange: |-
               =With(
                   {request: ParseJSON(Self.sampleProperty)},
                   If(
@@ -16,50 +16,195 @@ Screens:
                       IfError(
                           Switch(
                               Text(request.service),
+
                               "canvas",
-                              Set(varIntegrationResponse, JSON({requestId: Text(request.requestId), service: "canvas", ok: true, message: "Canvas received the request and returned this response.", data: {echo: Text(request.payload.message)}}, JSONFormat.Compact)),
+                              Set(
+                                  varIntegrationResponse,
+                                  JSON(
+                                      {
+                                          requestId: Text(request.requestId),
+                                          service: "canvas",
+                                          ok: true,
+                                          message: "Canvas bridge is working.",
+                                          data: {echo: Text(request.payload.message)}
+                                      },
+                                      JSONFormat.Compact
+                                  )
+                              ),
+
                               "dataverse",
                               Switch(
                                   Text(request.operation),
+
                                   "read-images",
                                   Refresh('PCF Probe Files');
                                   Set(varIntegrationResponse, JSON({requestId: Text(request.requestId), service: "dataverse", ok: true, message: "Loaded the latest saved files for image preview.", data: ForAll(FirstN(SortByColumns(Filter('PCF Probe Files', xcl_filename <> Blank()), "createdon", SortOrder.Descending), 3), {recordId: Text(xcl_pcfprobefileid), fileName: xcl_filename, mime: Coalesce(xcl_mimetype, "application/octet-stream"), contentBase64: If(Len(xcl_contentbase64) <= 174764, xcl_contentbase64, "")})}, JSONFormat.Compact)),
+
                                   "read",
                                   Refresh('PCF Probe Files');
-                                  Set(varIntegrationResponse, JSON({requestId: Text(request.requestId), service: "dataverse", ok: true, message: "Read dedicated Dataverse test records.", data: ForAll(FirstN('PCF Probe Files', 10), {recordId: Text(xcl_pcfprobefileid), name: xcl_name, fileName: xcl_filename, batchId: xcl_batchid})}, JSONFormat.Compact)),
-                                  "write",
-                                  With(
-                                      {saved: Patch('PCF Probe Files', Defaults('PCF Probe Files'), {xcl_name: Text(request.payload.message), xcl_batchid: Text(request.requestId)})},
-                                      Set(varIntegrationResponse, JSON({requestId: Text(request.requestId), service: "dataverse", ok: true, message: "Created a real Dataverse test record.", data: {recordId: Text(saved.xcl_pcfprobefileid)}}, JSONFormat.Compact))
-                                  ),
-                                  "bulk-write",
-                                  If(
-                                      CountRows(Table(request.payload.files)) < 1 || CountRows(Table(request.payload.files)) > 10,
-                                      Set(varIntegrationResponse, JSON({requestId: Text(request.requestId), service: "dataverse", ok: false, message: "A file batch must contain 1 to 10 files."}, JSONFormat.Compact)),
-                                      With(
-                                          {fileResults:
-                                          ForAll(
-                                              Table(request.payload.files),
-                                              With(
-                                                  {file: ThisRecord.Value},
-                                                  IfError(
-                                                      With(
-                                                          {saved: Patch('PCF Probe Files', Defaults('PCF Probe Files'), {xcl_name: Left(Text(file.name), 200), xcl_batchid: Text(request.requestId), xcl_filename: Text(file.name), xcl_mimetype: Text(file.mime), xcl_contentbase64: Text(file.contentBase64)})},
-                                                          {fileName: Text(file.name), ok: true, recordId: Text(saved.xcl_pcfprobefileid), error: ""}
-                                                      ),
-                                                      {fileName: Text(file.name), ok: false, recordId: "", error: FirstError.Message}
-                                                  )
+                                  Set(
+                                      varIntegrationResponse,
+                                      JSON(
+                                          {
+                                              requestId: Text(request.requestId),
+                                              service: "dataverse",
+                                              ok: true,
+                                              message: "Read Dataverse records.",
+                                              data: ForAll(
+                                                  FirstN('PCF Probe Files', 10),
+                                                  {
+                                                      recordId: Text(xcl_pcfprobefileid),
+                                                      name: xcl_name,
+                                                      fileName: xcl_filename,
+                                                      batchId: xcl_batchid
+                                                  }
                                               )
-                                          )
                                           },
-                                          Set(varIntegrationResponse, JSON({requestId: Text(request.requestId), service: "dataverse", ok: CountIf(fileResults, !ok) = 0, message: "Dataverse batch finished. Check each file result; successful files have already been saved.", data: fileResults}, JSONFormat.Compact))
+                                          JSONFormat.Compact
                                       )
                                   ),
-                                  Set(varIntegrationResponse, JSON({requestId: Text(request.requestId), service: "dataverse", ok: false, message: "Unsupported Dataverse operation."}, JSONFormat.Compact))
+
+                                  "write",
+                                  With(
+                                      {
+                                          saved: Patch(
+                                              'PCF Probe Files',
+                                              Defaults('PCF Probe Files'),
+                                              {
+                                                  xcl_name: Text(request.payload.message),
+                                                  xcl_batchid: Text(request.requestId)
+                                              }
+                                          )
+                                      },
+                                      Set(
+                                          varIntegrationResponse,
+                                          JSON(
+                                              {
+                                                  requestId: Text(request.requestId),
+                                                  service: "dataverse",
+                                                  ok: true,
+                                                  message: "Created a Dataverse record.",
+                                                  data: {
+                                                      recordId: Text(saved.xcl_pcfprobefileid)
+                                                  }
+                                              },
+                                              JSONFormat.Compact
+                                          )
+                                      )
+                                  ),
+
+                                  "bulk-write",
+                                  If(
+                                      CountRows(Table(request.payload.files)) < 1 ||
+                                      CountRows(Table(request.payload.files)) > 10,
+
+                                      Set(
+                                          varIntegrationResponse,
+                                          JSON(
+                                              {
+                                                  requestId: Text(request.requestId),
+                                                  service: "dataverse",
+                                                  ok: false,
+                                                  message: "Choose 1 to 10 files."
+                                              },
+                                              JSONFormat.Compact
+                                          )
+                                      ),
+
+                                      With(
+                                          {
+                                              fileResults: ForAll(
+                                                  Table(request.payload.files),
+                                                  With(
+                                                      {file: ThisRecord.Value},
+                                                      IfError(
+                                                          With(
+                                                              {
+                                                                  saved: Patch(
+                                                                      'PCF Probe Files',
+                                                                      Defaults('PCF Probe Files'),
+                                                                      {
+                                                                          xcl_name: Left(Text(file.name), 200),
+                                                                          xcl_batchid: Text(request.requestId),
+                                                                          xcl_filename: Text(file.name),
+                                                                          xcl_mimetype: Text(file.mime),
+                                                                          xcl_contentbase64: Text(file.contentBase64)
+                                                                      }
+                                                                  )
+                                                              },
+                                                              {
+                                                                  fileName: Text(file.name),
+                                                                  ok: true,
+                                                                  recordId: Text(saved.xcl_pcfprobefileid),
+                                                                  error: ""
+                                                              }
+                                                          ),
+                                                          {
+                                                              fileName: Text(file.name),
+                                                              ok: false,
+                                                              recordId: "",
+                                                              error: FirstError.Message
+                                                          }
+                                                      )
+                                                  )
+                                              )
+                                          },
+                                          Set(
+                                              varIntegrationResponse,
+                                              JSON(
+                                                  {
+                                                      requestId: Text(request.requestId),
+                                                      service: "dataverse",
+                                                      ok: CountIf(fileResults, !ok) = 0,
+                                                      message: "Batch finished. Check each file result.",
+                                                      data: fileResults
+                                                  },
+                                                  JSONFormat.Compact
+                                              )
+                                          )
+                                      )
+                                  ),
+
+                                  Set(
+                                      varIntegrationResponse,
+                                      JSON(
+                                          {
+                                              requestId: Text(request.requestId),
+                                              service: "dataverse",
+                                              ok: false,
+                                              message: "Unsupported operation."
+                                          },
+                                          JSONFormat.Compact
+                                      )
+                                  )
                               ),
-                              Set(varIntegrationResponse, JSON({requestId: Text(request.requestId), service: Text(request.service), ok: false, message: "This service is not configured."}, JSONFormat.Compact))
+
+                              Set(
+                                  varIntegrationResponse,
+                                  JSON(
+                                      {
+                                          requestId: Text(request.requestId),
+                                          service: Text(request.service),
+                                          ok: false,
+                                          message: "This service is not configured."
+                                      },
+                                      JSONFormat.Compact
+                                  )
+                              )
                           ),
-                          Set(varIntegrationResponse, JSON({requestId: Text(request.requestId), service: Text(request.service), ok: false, message: FirstError.Message}, JSONFormat.Compact))
+
+                          Set(
+                              varIntegrationResponse,
+                              JSON(
+                                  {
+                                      requestId: Text(request.requestId),
+                                      service: Text(request.service),
+                                      ok: false,
+                                      message: FirstError.Message
+                                  },
+                                  JSONFormat.Compact
+                              )
+                          )
                       )
                   )
               )
