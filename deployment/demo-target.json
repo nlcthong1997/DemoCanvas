@@ -17,11 +17,11 @@
   "pcfImport": "completed",
   "pcfVersion": "0.0.7",
   "canvasRoundTrip": "success-confirmed-in-user-preview-screenshot",
-  "integrationHandler": "temporarily-paused-for-datasource-repair; intended-handler-preserved-in-source",
+  "integrationHandler": "user-pasted-full-handler; runtime-bulk-write-confirmed",
   "integrationResponseBinding": "applied-and-server-verified",
   "canvasControl": "CmsUploadDemo1",
-  "canvasValidation": "temporary echo handler validated; no App Checker issues",
-  "status": "data-source-add-restored; awaiting handler paste and Dataverse runtime test",
+  "canvasValidation": "full handler previously validated; one medium per-file ForAll Patch advisory",
+  "status": "Canvas bridge and real Dataverse batch file persistence verified",
   "publicApi": {
     "endpoint": "https://api.github.com/repos/microsoft/PowerApps-Samples/contents/component-framework",
     "browserTest": "HTTP 200 and actual sample entries",
@@ -33,10 +33,11 @@
     "schema": "created-and-published",
     "canvasDataSource": "user-confirmed-added-with-Coauthoring-disabled",
     "handler": "applied-validated-and-server-verified",
-    "runtimeWrite": "Patch data source configuration error",
-    "fileContentVerification": "pending",
+    "runtimeWrite": "confirmed: 3 real batch file records",
+    "fileContentVerification": "independent PAC read: Base64 decoded; lengths match 90635,54944,28975; hashes recorded",
     "independentRead": "no records found after reported attempt",
-    "isolation": "both tables failed under Coauthoring; probe table added after disabling it"
+    "isolation": "both tables failed under Coauthoring; probe table added after disabling it",
+    "verifiedBatchId": "probe-1791712551925-12ycd0"
   },
   "coauthoring": "disabled-for-datasource-runtime-verification"
 }

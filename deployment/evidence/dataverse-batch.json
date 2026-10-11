@@ -1,0 +1,23 @@
+{
+  "environmentId": "268b8ad1-b6d1-ed49-b59a-d9bc85e9b99b",
+  "table": "xcl_pcfprobefile",
+  "batchId": "probe-1791712551925-12ycd0",
+  "verification": "Independent PAC FetchXML read; Base64 decoded; byte lengths match user-selected file sizes. Original local files were not opened for byte-for-byte hash comparison.",
+  "records": [
+    {
+      "recordId": "5eaf6c96-59c5-f111-a05a-002248ec830f",
+      "bytes": 90635,
+      "sha256": "134DF3BDE9F2874D6F1F4F0957EA09C8D1B94847FB5CCD5AC9DED87A524473CD"
+    },
+    {
+      "recordId": "5faf6c96-59c5-f111-a05a-002248ec830f",
+      "bytes": 54944,
+      "sha256": "2A2785EB260FE3101C6EDEDB8B756CD751657C8BDE9FD1B13592D98DB1EA884E"
+    },
+    {
+      "recordId": "60af6c96-59c5-f111-a05a-002248ec830f",
+      "bytes": 28975,
+      "sha256": "D860B8895FB425D9B35C7FD0E1E1E72F08990EBCE11E4F4B89FAD5D9AAA04AB6"
+    }
+  ]
+}
