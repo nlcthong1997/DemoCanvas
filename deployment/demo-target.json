@@ -21,7 +21,7 @@
   "integrationResponseBinding": "applied-and-server-verified",
   "canvasControl": "CmsUploadDemo1",
   "canvasValidation": "temporary echo handler validated; no App Checker issues",
-  "status": "investigating Canvas datasource-add failure; MCP disconnected",
+  "status": "data-source-add-restored; awaiting handler paste and Dataverse runtime test",
   "publicApi": {
     "endpoint": "https://api.github.com/repos/microsoft/PowerApps-Samples/contents/component-framework",
     "browserTest": "HTTP 200 and actual sample entries",
@@ -31,11 +31,12 @@
     "table": "xcl_pcfprobefile",
     "dataSource": "PCF Probe Files",
     "schema": "created-and-published",
-    "canvasDataSource": "cannot-readd: datasource-is-corrupted",
+    "canvasDataSource": "user-confirmed-added-with-Coauthoring-disabled",
     "handler": "applied-validated-and-server-verified",
     "runtimeWrite": "Patch data source configuration error",
     "fileContentVerification": "pending",
     "independentRead": "no records found after reported attempt",
-    "isolation": "user reports Accounts and probe table both fail to add in blank Canvas"
-  }
+    "isolation": "both tables failed under Coauthoring; probe table added after disabling it"
+  },
+  "coauthoring": "disabled-for-datasource-runtime-verification"
 }
