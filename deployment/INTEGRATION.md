@@ -1,35 +1,80 @@
-# Single-PCF integration feasibility
+﻿# Single-PCF integration lab — version 0.0.7
 
-One PCF hosts Home, Bulk upload and Integration lab. React modules may be split into folders; they still compile into one component bundle. PCF version `0.0.4` adds the integration request/response bridge and preserves pending requests during navigation.
+One React PCF hosts Home, Bulk upload and Integration lab. Its source is split into modules and compiled into one component bundle.
 
-## Boundary
+## How the app works
 
-`sampleProperty` emits JSON through `notifyOutputChanged`. Canvas handles `OnChange`, uses its connectors, and sets `varIntegrationResponse`. Bind the PCF input `integrationResponse` to `Coalesce(varIntegrationResponse, "")`. The React panel accepts a response only when its request ID and service match the pending request. One request runs at a time, with a 30-second UI timeout. A timeout does not cancel the backend operation; inspect the backend before retrying a write. Navigation keeps the integration panel mounted so pending requests/results survive screen changes.
+```mermaid
+flowchart LR
+  React[React screens and file picker] --> Output[PCF sampleProperty output]
+  Output --> Fx[Canvas OnChange / Power Fx]
+  Fx --> DV[Dataverse connector / Patch]
+  DV --> Fx
+  Fx --> Input[PCF integrationResponse input]
+  Input --> React
+  React --> Fetch[fetch public GitHub API]
+  Fetch --> React
+```
 
-Canvas PCF has no supported `context.webAPI` or custom authentication. Authenticated services use Canvas connectors or a flow. No tokens, passwords, client secrets or signed flow URLs are embedded in React. This version makes no direct external HTTP calls.
+`CmsUploadDemo/index.ts` implements the PCF lifecycle. `init` captures `notifyOutputChanged` and tracks container resizing. `updateView` renders the React root with the latest response and allocated height. React dispatches JSON; `getOutputs` exposes it as `sampleProperty`. Canvas `OnChange` runs `Integration-OnChange.pfx` and writes `varIntegrationResponse`, bound back to `Coalesce(varIntegrationResponse, "")`.
 
-`Integration-OnChange.pfx` contains the current Canvas handler. It returns a real Canvas echo for `canvas` and an explicit failure for unconfigured services. That echo proves only the host bridge, not any backend integration. Standalone preview has no connected host and never reports a backend success.
+Requests carry `kind`, `version`, `requestId`, `service`, `operation` and `payload`. React accepts a response only for its pending request ID and service. Only one request runs at a time. The 30-second UI timeout does not cancel Canvas writes. Successful files remain saved if another file fails; inspect the results/backend before retrying to avoid duplicate records. Navigation keeps the lab mounted so results and pending state survive changing screens.
 
-## Evidence and remaining configuration
+The manifest declares the React platform library, CSS, request/response properties and external domain `api.github.com`. CSS is scoped to `.xp-app`. The tracked PCF height constrains the root and gives the main area/sidebar vertical scrolling. Canvas places `CmsUploadDemo1` on `Screen1` with width/height `Parent.Width`/`Parent.Height` and zero position defaults.
 
-| Test | Required setup | Passing evidence |
+Canvas PCF does not support Dataverse `context.webAPI` or custom authentication. Authenticated services use Canvas connectors or flows; no access tokens or secrets are embedded in React. The public GitHub request uses anonymous `fetch` with credentials omitted. External-service usage makes this PCF a premium control; the manifest declares it accordingly.
+
+Official references: [Canvas PCF limitations](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/limitations), [external service declaration](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/external-service-usage).
+
+## Implemented tests
+
+| Feature | Implementation | Evidence so far |
 | --- | --- | --- |
-| Canvas | Updated component; response input and OnChange binding | Message returns from Power Fx with matching request ID |
-| Dataverse read/write | Dedicated probe table and Canvas data source | Read result; created record ID; independent record lookup |
-| Power Automate | Solution flow with Power Apps (V2) trigger and response; add to app | Flow run history and matching response |
-| SharePoint read/write | Demo site, dedicated probe list and connector | Read result; created item ID; independent item lookup |
-| REST API | Demo API and custom connector or a flow HTTP action | Actual status/result and matching API or flow logs |
+| Canvas round trip | React output → Power Fx echo → React input | User confirmed Success in Canvas Preview |
+| Public REST API | GitHub REST lists up to 10 entries from Microsoft's PowerApps-Samples/component-framework directory | Real Chrome HTTP 200 and returned sample names; target Canvas Preview confirmation pending |
+| Dataverse read | Refresh and read up to 10 records from PCF Probe Files | Formula validated and server state verified; runtime test pending |
+| Dataverse write | Patch a dedicated test record, return its actual ID | Formula validated and server state verified; runtime test pending |
+| Batch file contents | Encode selected files as Base64; Canvas Patch one record per file, return per-file IDs/errors | Real file bytes verified through the browser request fixture; live Dataverse persistence test pending |
+| Power Automate | Reserved test button | No flow configured or run verified |
+| SharePoint | Reserved read/write buttons | No site/list/connection configured or operations verified |
 
-The user has no SharePoint site/list or API endpoint yet. The Canvas app currently has zero data sources. No Dataverse/SharePoint CRUD, flow run or REST call has been verified.
+The actual API endpoint is `https://api.github.com/repos/microsoft/PowerApps-Samples/contents/component-framework`. There is a 15-second HTTP abort timer, HTTP error handling and response-shape validation. GitHub can rate-limit anonymous requests. APIs requiring credentials should instead use a custom connector or a flow.
 
-Start with a dedicated Dataverse table `xcl_integrationprobe` with a text primary name, request ID and message columns. A flow can subsequently expose a single request/response contract for API and SharePoint tests. Connector connections must be authenticated in the target environment and added to the app in Studio; names and schema must be discovered before generating Power Fx bindings. Do not use production tables or lists for probe writes.
+## Dedicated Dataverse table
 
-## Verification performed
+`DataverseProbe/Program.cs` created and published user-owned `xcl_pcfprobefile` in the existing demo solution `XCL_canvas_pcf_lab`. It verifies the organization and solution IDs before changing metadata. Its setup creates no file records. The user added **PCF Probe Files** to Canvas; MCP confirms it is a writable CdsNative data source and discovers its schema.
 
-PCF manifest, ESLint and TypeScript build pass. Chrome fixture checks cover request locking, malformed/wrong/stale responses, host response, duplicate/late response rejection, timeout, disconnected host and 390-pixel layout. Fixture responses are local test data and are not backend evidence.
+| Logical column | Purpose |
+| --- | --- |
+| xcl_pcfprobefileid | Record GUID |
+| xcl_name | Primary name |
+| xcl_batchid | Correlated request/batch ID |
+| xcl_filename | Original file name |
+| xcl_mimetype | MIME type |
+| xcl_contentbase64 | Actual Base64-encoded file contents, memo column |
+| xcl_studentid | Reserved for subsequent photo integration |
 
-After importing the new PCF into Dataverse, save and reopen Studio, accept the code-component update, reconnect/sync Canvas, bind the handler/input and compile. Then run Canvas round trip in Preview. Record each backend test independently; UI availability does not establish connectivity.
+The lab permits up to 10 files, 128 KB each and 384 KB total before Base64 encoding. This is a small-file feasibility test using a text column, not a native Dataverse File column. Production photo storage should use a native File/Image column or SharePoint and a suitable upload service. The original **Bulk upload photos → Send** remains simulated and emits metadata without photo bytes.
 
-Current live state: OnChange and `integrationResponse=Coalesce(varIntegrationResponse, "")` are applied and verified through a fresh server synchronization. Canvas validation passes and App Checker reports no issues. The user's Preview screenshot confirms a successful Canvas round trip. It does not establish backend connectivity. Save the app before leaving Studio so the latest coauthoring changes persist.
+`Integration-OnChange.pfx` is the live handler, also present in `canvas/Screen1.pa.yaml`. Validation passes. App Checker reports one medium performance advisory for per-file `Patch` inside `ForAll`; this is deliberate for individual error results with a maximum of 10 files. A production high-volume uploader needs queueing/batched server processing rather than extending this loop.
 
-Version `0.0.5` uses the tracked `context.mode.allocatedHeight` to constrain the hosted React root and enables vertical scrolling inside the main content/sidebar. Standalone preview retains its natural page height. Chrome checks confirm mouse-wheel scrolling with a 600px PCF viewport and a positive, scrollable main region on a 390px phone viewport.
+## Runtime checklist
+
+1. Save the app, leave Studio, reopen and accept a code-component update if shown. Confirm **Batch files → Dataverse** is visible.
+2. Preview → Integration lab → REST API **Read test**. Expect HTTP 200 and actual sample names.
+3. Dataverse **Write test**, then **Read test**. Expect a real record GUID and the saved record.
+4. Select `test-files/probe-alpha.txt` and `test-files/probe-beta.txt` in Batch files, then save. Expect two individual record GUIDs.
+5. Independently query Dataverse by returned batch ID, decode `xcl_contentbase64` and compare bytes with the two originals. UI Success alone is not this independent verification.
+6. Save/publish the Canvas app after reviewing the changes.
+
+Read-only verification using the SDK helper (interactive Microsoft sign-in may be required):
+
+```powershell
+dotnet run --project deployment\DataverseProbe -- --verify <returned-request-id> deployment\test-files
+```
+
+This checks the demo organization/solution, fetches that batch, compares decoded contents byte-for-byte with local originals, and reports GUIDs, lengths and SHA256 hashes. It does not print file contents or write records. Without arguments the same helper performs table setup instead, so use the explicit `--verify` arguments for verification. The helper targets this demo only; a company environment needs its own verified configuration.
+
+The latest user Preview attempt reported an error without its operation or message yet. An independent PAC query still finds no test records. Backend persistence is therefore unverified; obtain the exact runtime error before changing authentication or treating any test as successful.
+
+PCF manifest, TypeScript and ESLint checks pass. Chrome tests cover scroll/mobile layout, stale/malformed/duplicate responses, pending request locking, navigation, timeouts, actual public API fetch, HTTP failure handling and selected file encoding. Browser fixtures do not prove live Dataverse writes.

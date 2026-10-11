@@ -4,9 +4,10 @@ export interface ProbeRequest {
   version: 1;
   requestId: string;
   service: ProbeService;
-  operation: 'ping' | 'read' | 'write';
-  payload: { message: string };
+  operation: 'ping' | 'read' | 'write' | 'bulk-write';
+  payload: { message: string; files?: ProbeFile[] };
 }
+export interface ProbeFile { name: string; mime: string; contentBase64: string; bytes: number; }
 export interface ProbeResponse {
   requestId: string;
   service: ProbeService;

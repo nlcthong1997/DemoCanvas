@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="CmsUploadDemoNameSpace" constructor="CmsUploadDemo" version="0.0.5" display-name-key="XCL Profile Photo Demo" description-key="Profile photo and integration feasibility tests" control-type="virtual" >
+  <control namespace="CmsUploadDemoNameSpace" constructor="CmsUploadDemo" version="0.0.7" display-name-key="XCL Profile Photo Demo" description-key="Profile photo and integration feasibility tests" control-type="virtual" >
     <!--external-service-usage node declares whether this 3rd party PCF control is using external service or not, if yes, this control will be considered as premium and please also add the external domain it is using.
     If it is not using any external service, please set the enabled="false" and DO NOT add any domain below. The "enabled" will be false by default.
     Example1:
@@ -11,14 +11,15 @@
       <external-service-usage enabled="false">
       </external-service-usage>
     -->
-    <external-service-usage enabled="false">
+    <external-service-usage enabled="true">
+      <domain>api.github.com</domain>
       <!--UNCOMMENT TO ADD EXTERNAL DOMAINS
       <domain></domain>
       <domain></domain>
       -->
     </external-service-usage>
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
-    <property name="sampleProperty" display-name-key="Demo batch metadata" description-key="JSON metadata for a simulated batch; contains no image bytes" of-type="Multiple" usage="bound" required="false" />
+    <property name="sampleProperty" display-name-key="Canvas request JSON" description-key="Integration requests including small test file contents, or simulated photo batch metadata" of-type="Multiple" usage="bound" required="false" />
     <property name="integrationResponse" display-name-key="Integration response JSON" description-key="Correlated result returned by Canvas connectors" of-type="Multiple" usage="input" required="false" />
     <!--
       Property node's of-type attribute can be of-type-group attribute.

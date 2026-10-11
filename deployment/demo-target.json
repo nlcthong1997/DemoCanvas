@@ -15,11 +15,26 @@
   },
   "canvasConnection": "connected-and-synced",
   "pcfImport": "completed",
-  "pcfVersion": "0.0.5",
+  "pcfVersion": "0.0.7",
   "canvasRoundTrip": "success-confirmed-in-user-preview-screenshot",
   "integrationHandler": "applied-and-validated",
   "integrationResponseBinding": "applied-and-server-verified",
   "canvasControl": "CmsUploadDemo1",
-  "canvasValidation": "passed; no App Checker issues",
-  "status": "canvas-roundtrip-confirmed; scroll-fix-deployed; backend-setup-pending"
+  "canvasValidation": "passed; one medium performance advisory for per-file Patch in ForAll",
+  "status": "implementation-deployed; investigate-user-runtime-error",
+  "publicApi": {
+    "endpoint": "https://api.github.com/repos/microsoft/PowerApps-Samples/contents/component-framework",
+    "browserTest": "HTTP 200 and actual sample entries",
+    "canvasPreview": "pending"
+  },
+  "dataverse": {
+    "table": "xcl_pcfprobefile",
+    "dataSource": "PCF Probe Files",
+    "schema": "created-and-published",
+    "canvasDataSource": "connected-writable",
+    "handler": "applied-validated-and-server-verified",
+    "runtimeWrite": "user-reported-error; operation-and-message-pending",
+    "fileContentVerification": "pending",
+    "independentRead": "no records found after reported attempt"
+  }
 }
