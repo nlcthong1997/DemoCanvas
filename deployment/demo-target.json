@@ -15,7 +15,10 @@
   },
   "canvasConnection": "connected-and-synced",
   "pcfImport": "completed",
+  "pcfVersion": "0.0.4",
+  "integrationHandler": "applied-and-validated",
+  "integrationResponseBinding": "pending-studio-component-update",
   "canvasControl": "CmsUploadDemo1",
   "canvasValidation": "passed; no app checker issues",
-  "status": "pcf-inserted-and-configured; awaiting-runtime-review"
+  "status": "integration-lab-deployed; awaiting-studio-component-update-and-backend-setup"
 }

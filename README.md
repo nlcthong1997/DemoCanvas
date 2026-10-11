@@ -1,6 +1,6 @@
 # XCL Profile Photo — React PCF prototype
 
-Two interactive screens based on pages 1 and 8 of the supplied PDF: **Home** and **Bulk upload**. Both share the sidebar and campus selection. Other navigation items show an explanatory message.
+Home and Bulk upload follow pages 1 and 8 of the supplied PDF. Integration lab adds a request/response bridge for service feasibility testing inside the same PCF. Other unfinished navigation items show an explanatory message.
 
 ## Preview
 
@@ -33,11 +33,11 @@ The four initial rows and Home statistics are samples. Selecting real files repl
 
 ## Canvas integration boundary
 
-`sampleProperty` returns JSON metadata when Send is clicked, through `notifyOutputChanged()`. It includes `requestId`, `photoType`, `campus`, `demo: true`, and `files` with `name`, `id`, `originalBytes`, `resizedBytes`, and `sample`. It does **not** contain image bytes.
+`sampleProperty` returns JSON metadata when Send is clicked, through `notifyOutputChanged()`. It includes `requestId`, `photoType`, `campus`, `demo: true`, and `files` with `name`, `id`, `originalBytes`, `resizedBytes`, and `sample`. It does **not** contain image bytes. Integration lab uses the same output for requests with `kind: "integration-probe"`; responses return through the new `integrationResponse` input. See `deployment/INTEGRATION.md` for the contract and backend acceptance criteria.
 
 No photos are uploaded to SharePoint, Dataverse, Entra ID or PowerSchool. Campus authorization, real ID lookup and delivery are not implemented. User/campus values are mock data. The PCF has been imported into the authorized demo environment and solution recorded in `deployment/demo-target.json`, inserted into Canvas as `CmsUploadDemo1`, and configured to fill `Screen1`. Canvas YAML validation passes and App Checker reports no issues. Actual full-screen runtime rendering still needs review in Studio Preview.
 
-Manifest version: `0.0.2`. Platform React is used; CSS is scoped to `.xp-app`; no external services are called. To test in Canvas, package the PCF into a solution, authenticate to the intended development environment, import it and add the control to a Canvas screen. Set a suitable width and height.
+Manifest version: `0.0.4`. Platform React is used; CSS is scoped to `.xp-app`; no direct external services are called by the component. Production PCF 0.0.4 has been pushed to the demo solution. Canvas's integration OnChange handler validates successfully; Studio still needs to update its component manifest and bind the response input before a live round-trip test can be claimed. Dataverse, flow, SharePoint and REST operations remain unconfigured and unverified.
 
 ## Verification
 

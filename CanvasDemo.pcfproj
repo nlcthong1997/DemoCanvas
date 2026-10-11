@@ -11,6 +11,7 @@
     <Name>CanvasDemo</Name>
     <ProjectGuid>4c182a2e-50b8-41de-8228-dc434ec6b2c6</ProjectGuid>
     <OutputPath>$(MSBuildThisFileDirectory)out\controls</OutputPath>
+    <PcfBuildMode>production</PcfBuildMode>
   </PropertyGroup>
 
   <PropertyGroup>

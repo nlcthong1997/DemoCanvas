@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { IntegrationLab, IntegrationProps } from './integrations/IntegrationLab';
 
-type Screen = 'home' | 'bulk';
+type Screen = 'home' | 'bulk' | 'integrations';
 type PhotoType = 'Students' | 'Parents';
 interface PhotoRow { key: string; name: string; id: string; originalSize: number; size?: number; preview?: string; error?: string; sample?: boolean; }
-export interface IHelloWorldProps { onSubmit?: (payload: string) => void; }
+export interface IHelloWorldProps extends IntegrationProps { onSubmit?: (payload: string) => void; }
 const samples: PhotoRow[] = [
   { key: 's1', name: '0012345.jpg', id: '0012345', originalSize: 3565158, size: 38912, sample: true },
   { key: 's2', name: '0012346.png', id: '0012346', originalSize: 2202010, size: 35840, sample: true },
@@ -39,7 +40,7 @@ async function preparePhoto(file: File, type: PhotoType): Promise<PhotoRow> {
   finally { URL.revokeObjectURL(objectUrl); }
 }
 
-export function HelloWorld({ onSubmit }: IHelloWorldProps): React.ReactElement {
+export function HelloWorld({ onSubmit, onIntegrationRequest, integrationResponse }: IHelloWorldProps): React.ReactElement {
   const [screen, setScreen] = React.useState<Screen>('home');
   const [campus, setCampus] = React.useState('SG · XWA');
   const [type, setType] = React.useState<PhotoType>('Students');
@@ -88,11 +89,13 @@ export function HelloWorld({ onSubmit }: IHelloWorldProps): React.ReactElement {
         <button className={screen === 'bulk' ? 'xp-nav active xp-nav-bulk' : 'xp-nav xp-nav-bulk'} onClick={() => navigate('bulk')} aria-current={screen === 'bulk' ? 'page' : undefined}>Bulk upload</button>
         {['Upload status', 'History'].map(label => <button className="xp-nav" key={label} onClick={() => unavailable(label)}>{label}</button>)}
         <div className="xp-nav-heading">Admin</div><button className="xp-nav" onClick={() => unavailable('Access')}>Access</button>
+        <button className={screen === 'integrations' ? 'xp-nav active' : 'xp-nav'} onClick={() => navigate('integrations')}>Integration lab</button>
       </nav>
       <div className="xp-sidebar-note"><span className="xp-demo-dot" /> Interactive demo<small>Home & bulk upload</small></div>
     </aside>
     <main className="xp-main">
-      {screen === 'home' ? <>
+      <div hidden={screen !== 'integrations'}><IntegrationLab onIntegrationRequest={onIntegrationRequest} integrationResponse={integrationResponse} /></div>
+      {screen !== 'integrations' && (screen === 'home' ? <>
         <header className="xp-header"><div><h1>Good morning, Linh</h1><p>Registrar · access to SG · XWA and SG · XCT</p></div><div className="xp-campus-inline"><label htmlFor="home-campus">Campus</label>{campusSelect('home-campus')}</div></header>
         <div className="xp-quick-grid">
           <button className="xp-quick xp-profile" onClick={() => unavailable('My photo')}><span className="xp-avatar">LN</span><span><strong>My photo</strong><small>Update your Microsoft 365 photo</small></span></button>
@@ -117,7 +120,7 @@ export function HelloWorld({ onSubmit }: IHelloWorldProps): React.ReactElement {
         </section>
         {sent > 0 && <section className="xp-panel xp-progress"><div><strong>Demo batch complete</strong><span>{sent} of {sent} queued</span></div><progress value={sent} max={sent} aria-label="Demo batch progress" /><p>Demo completed. No photos have been sent to a school system.</p></section>}
         <p className="xp-caption xp-upload-note">Preview demo · photo delivery is simulated.</p>
-      </>}
+      </>)}
       {notice && <div className="xp-notice" role="status"><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice('')}>×</button></div>}
     </main>
   </div>;

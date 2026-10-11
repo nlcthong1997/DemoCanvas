@@ -35,10 +35,15 @@ export class CmsUploadDemo implements ComponentFramework.ReactControl<IInputs, I
      * @returns ReactElement root react element for the control
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
-        const props: IHelloWorldProps = { onSubmit: (payload: string): void => {
+        const dispatch = (payload: string): void => {
             this.request = payload;
             this.notifyOutputChanged();
-        } };
+        };
+        const props: IHelloWorldProps = {
+            onSubmit: dispatch,
+            onIntegrationRequest: dispatch,
+            integrationResponse: context.parameters.integrationResponse.raw ?? undefined
+        };
         return React.createElement(
             HelloWorld, props
         );

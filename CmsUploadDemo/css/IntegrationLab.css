@@ -1,0 +1,11 @@
+.xp-app .xp-probe-input { padding: 20px; margin-bottom: 16px; }
+.xp-app .xp-probe-input label { display: block; font-weight: 600; margin-bottom: 8px; }
+.xp-app .xp-probe-input input { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #d6dde3; border-radius: 6px; font: inherit; }
+.xp-app .xp-probe-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.xp-app .xp-probe-card { padding: 20px; }
+.xp-app .xp-probe-card h2, .xp-app .xp-probe-results h2 { margin-top: 0; font-size: 16px; }
+.xp-app .xp-probe-card p, .xp-app .xp-probe-input p { color: #64748b; font-size: 13px; }
+.xp-app .xp-probe-results { padding: 20px; margin-top: 20px; }
+.xp-app .xp-probe-results article { border-top: 1px solid #e6eaf0; padding: 16px 0; overflow-wrap: anywhere; }
+.xp-app .xp-probe-results pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f5f7fa; padding: 12px; }
+@media(max-width:480px) { .xp-app .xp-sidebar .xp-nav:last-child { display: block; } .xp-app .xp-probe-grid { grid-template-columns: minmax(0, 1fr); } }
