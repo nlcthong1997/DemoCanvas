@@ -30,4 +30,4 @@ PCF manifest, ESLint and TypeScript build pass. Chrome fixture checks cover requ
 
 After importing the new PCF into Dataverse, save and reopen Studio, accept the code-component update, reconnect/sync Canvas, bind the handler/input and compile. Then run Canvas round trip in Preview. Record each backend test independently; UI availability does not establish connectivity.
 
-Current live state: the OnChange handler has been applied and validates. App Checker reports one unused-variable warning for `varIntegrationResponse` because the response input is not yet available/bound in Studio's old manifest. Resolve it by updating the component and binding the response, not by deleting the handler variable.
+Current live state: Studio has loaded the updated component manifest. OnChange and `integrationResponse=Coalesce(varIntegrationResponse, "")` are applied and verified through a fresh server synchronization. Canvas validation passes and App Checker reports no issues. Runtime round-trip evidence is still pending the user's Preview test. Save the app before leaving Studio so the latest coauthoring changes persist.

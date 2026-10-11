@@ -8,7 +8,9 @@ Screens:
           ComponentName: xcl_CmsUploadDemoNameSpace.CmsUploadDemo
           Properties:
             Height: =Parent.Height
+            Tooltip: ="Home and bulk photo upload prototype"
             Width: =Parent.Width
+            integrationResponse: =Coalesce(varIntegrationResponse, "")
             OnChange: |
               =With(
                   {request: ParseJSON(Self.sampleProperty)},

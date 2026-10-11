@@ -31,7 +31,7 @@ PAC authenticated to the target environment and successfully pushed the PCF to `
 
 The user imported the component into Studio and inserted it into `Screen1` as `CmsUploadDemo1`. Canvas MCP then applied `X=0`, `Y=0`, `Width=Parent.Width`, and `Height=Parent.Height`. A fresh server synchronization confirmed the size formulas; zero positions are omitted as defaults. Canvas YAML validation passes and App Checker reports no issues. Full-screen rendering, interactive Preview behavior and saving/publishing the latest app version still require runtime review. The user's blank `Component1` definition is preserved.
 
-Integration lab is implemented and deployed in PCF `0.0.4`. `Integration-OnChange.pfx` has been applied to Canvas and validated. The live app's component catalog still reports the old manifest without `integrationResponse`; update the code component in Studio before binding that input to `Coalesce(varIntegrationResponse, "")`. Backend services are not configured. See `INTEGRATION.md` for the feasibility evidence checklist.
+Integration lab is implemented and deployed in PCF `0.0.4`. Studio has loaded the updated manifest. `Integration-OnChange.pfx` and the input binding `integrationResponse=Coalesce(varIntegrationResponse, "")` are applied and server-verified. Canvas validation passes and App Checker reports no issues. Runtime round-trip and backend services still require testing/configuration. Save before closing Studio. See `INTEGRATION.md` for the feasibility evidence checklist.
 
 Repeat deployment after code changes:
 

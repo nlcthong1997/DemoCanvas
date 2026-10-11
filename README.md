@@ -37,7 +37,7 @@ The four initial rows and Home statistics are samples. Selecting real files repl
 
 No photos are uploaded to SharePoint, Dataverse, Entra ID or PowerSchool. Campus authorization, real ID lookup and delivery are not implemented. User/campus values are mock data. The PCF has been imported into the authorized demo environment and solution recorded in `deployment/demo-target.json`, inserted into Canvas as `CmsUploadDemo1`, and configured to fill `Screen1`. Canvas YAML validation passes and App Checker reports no issues. Actual full-screen runtime rendering still needs review in Studio Preview.
 
-Manifest version: `0.0.4`. Platform React is used; CSS is scoped to `.xp-app`; no direct external services are called by the component. Production PCF 0.0.4 has been pushed to the demo solution. Canvas's integration OnChange handler validates successfully; Studio still needs to update its component manifest and bind the response input before a live round-trip test can be claimed. Dataverse, flow, SharePoint and REST operations remain unconfigured and unverified.
+Manifest version: `0.0.4`. Platform React is used; CSS is scoped to `.xp-app`; no direct external services are called by the component. Production PCF 0.0.4 has been pushed to the demo solution. Studio has loaded the updated manifest; its integration OnChange handler and response input are applied and server-verified. Canvas validation passes and App Checker reports no issues. The live round-trip still needs a Preview test. Dataverse, flow, SharePoint and REST operations remain unconfigured and unverified.
 
 ## Verification
 
